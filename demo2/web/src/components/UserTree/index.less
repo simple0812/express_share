@@ -1,0 +1,120 @@
+:global {
+  .ant-tree {
+    .ant-tree-node-content-wrapper {
+      width: calc(100% - 22px);
+      .ant-tree-title {
+        width: 100%;
+        display: flex;
+        .treenodeTitle {
+          width: 100%;
+          .name {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            width: calc(100% - 46px);
+            display: inline-block;
+            vertical-align: top;
+          }
+          .matchCount {
+            width: 46px;
+            text-align: right;
+            margin-top: 4px;
+            display: inline-block;
+            vertical-align: top;
+            height: 16px;
+            border-radius: 8px;
+            background-color: #95a1b7;
+            color: #fff;
+            font-size: 12px;
+            line-height: 16px;
+            padding: 0 4px;
+          }
+        }
+      }
+    }
+    .ant-tree-node-selected {
+      .matchCount {
+        background-color: @primary-color !important;
+      }
+    }
+  }
+}
+.userTreeWrapper {
+  height: 100%;
+  .treeWrapper {
+    overflow: auto;
+    position: absolute;
+    background: antiquewhite;
+    left: -308px;
+    top: 37px;
+    width: 300px;
+    width: 301px;
+    height: calc(100vh - 72px);
+    background: rgba(255, 255, 255, 1);
+    box-shadow: 0px 4px 12px 0px rgba(15, 55, 126, 0.37);
+    border-radius: 8px;
+    padding: 24px;
+    :global {
+      .treenodeTitle {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+    }
+  }
+  .btnWrapper {
+    width: 106px;
+    position: absolute;
+    top: calc(50vh - 74px);
+    left: -56px;
+    .btn {
+      height: 32px;
+      text-align: center;
+      background: linear-gradient(#82c5f5 0%, #1b83f1 100%);
+      line-height: 32px;
+      border-radius: 16px;
+      margin-bottom: 24px;
+      color: #fff;
+      box-shadow: 0px 6px 10px 1px rgba(127, 161, 220, 0.5);
+      cursor: pointer;
+    }
+  }
+  .selectedWrapper {
+    height: 100%;
+    .selectedGroup {
+      height: 20px;
+      background: rgba(236, 239, 242, 1);
+      border-radius: 12px;
+      height: 20px;
+      font-size: 12px;
+      font-family: PingFangSC-Regular, PingFang SC;
+      font-weight: 400;
+      color: rgba(72, 86, 117, 1);
+      line-height: 20px;
+      padding: 0 8px;
+      display: inline-block;
+      min-width: 106px;
+      margin: 0 36px;
+    }
+    .selectedItems {
+      height: calc(100% - 26px);
+      padding: 24px 12px 12px 72px;
+      overflow: auto;
+    }
+    .countWrapper {
+      padding-right: 24px;
+      height: 17px;
+      font-size: 12px;
+      font-family: PingFangSC-Regular, PingFang SC;
+      font-weight: 400;
+      color: rgba(149, 161, 183, 1);
+      line-height: 17px;
+      text-align: right;
+      .count {
+        color: @primary-color;
+        display: inline-block;
+        margin: 0 4px;
+      }
+    }
+  }
+}

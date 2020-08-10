@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 60.1 (88133) - https://sketch.com -->
+    <title>Rectangle</title>
+    <desc>Created with Sketch.</desc>
+    <g id="1.0" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="切图" transform="translate(-12.000000, -96.000000)" fill-rule="nonzero">
+            <g id="清空" transform="translate(12.000000, 96.000000)">
+                <rect id="Rectangle" fill="#000000" opacity="0" x="0" y="0" width="16" height="16"></rect>
+                <path d="M8.96,15.04 C8.96,15.04 8.88,15.04 8.96,15.04 L7.36,14.16 L7.36,14.08 C7.52,13.76 8.88,10.88 8.72,10.96 C8.56,11.12 7.6,12.16 6.88,13.2 L6.48,13.76 C6.48,13.76 4.88,12.64 4.32,12 C4.64,11.52 6.4,9.28 6.4,9.28 L3.44,11.04 C3.28,10.88 2.32,9.84 2,9.28 C2.24,9.04 3.84,7.68 3.84,7.68 L1.6,8.48 L0.8,6.96 L0.8,6.88 C1.2,6.8 4.48,6.16 6,5.04 L6.16,5.04 L10.72,9.6 C10.72,9.6 10.8,9.68 10.72,9.76 C10.56,10.16 9.28,12.24 8.96,15.04 Z M14.88,2.56 L12,5.44 L12,5.52 C12.64,6.64 12.64,7.92 11.68,8.88 L11.6,8.88 L7.04,4.32 L7.04,4.24 C8,3.28 9.28,3.28 10.4,3.92 L10.48,3.92 L13.36,1.04 C13.76,0.64 14.48,0.64 14.88,1.04 C15.28,1.44 15.28,2.16 14.88,2.56 L14.88,2.56 Z" id="Shape" fill="#7EAFEE"></path>
+            </g>
+        </g>
+    </g>
+</svg>

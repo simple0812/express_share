@@ -1,0 +1,79 @@
+.localClass {
+  :global {
+    .ant-select-dropdown-menu-item {
+      padding-right: 30px;
+    }
+
+    .combine-search-cmd-container {
+      float: left;
+    }
+
+    .search-item-container {
+      display: flex;
+      align-items: center;
+      margin-bottom: 7px;
+      // margin-right: 15px;
+
+      .search-item-label {
+        display: block;
+        flex-shrink: 0;
+        text-align: right;
+        margin-right: 4px;
+        overflow: hidden;
+        // text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .search-item-control {
+        flex-shrink: 1;
+        flex-grow: 1;
+        height: 32px;
+        display: inline-block;
+        width: 100%;
+        overflow: hidden;
+      }
+
+      .ant-input-affix-wrapper {
+        input {
+          border-radius: 2px;
+        }
+      }
+
+      .ant-calendar-picker-input {
+        border-radius: 2px;
+      }
+
+      // 修改ant select 默认样式
+      .ant-select-selection.ant-select-selection--multiple {
+        overflow: hidden;
+        height: 32px;
+        border-radius: 2px;
+
+        .ant-select-selection__rendered {
+          height: 100%;
+        }
+
+        ul {
+          display: flex;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+
+          li.ant-select-selection__choice {
+            flex-shrink: 0;
+            display: inline;
+            // padding: 0;
+            // border: none;
+            // background: none;
+            // > div {
+            //   display: inline;
+            // }
+            // .ant-select-selection__choice__remove {
+            //   display: none;
+            // }
+          }
+        }
+      }
+    }
+  }
+}

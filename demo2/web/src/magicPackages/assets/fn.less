@@ -1,0 +1,76 @@
+#fn() {
+  // 文本溢出
+  .ellipsis {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  //多行文本溢出
+  .ellipsis-multi(@line: 2) {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: @line;
+    overflow: hidden;
+  }
+
+  // 清理浮动
+  .clearfix {
+    display: block;
+    zoom: 1;
+
+    &:after {
+      content: ' ';
+      display: block;
+      font-size: 0;
+      height: 0;
+      clear: both;
+      visibility: hidden;
+    }
+  }
+
+  // 垂直水平居中
+  .middle(@direction: row, @justify-content:center) {
+    display: flex;
+    align-items: center;
+    flex-direction: @direction;
+    justify-content: @justify-content;
+  }
+
+  //一侧固定 一侧自适应
+  .middle_box(@justify-content:space-between) {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: @justify-content;
+
+    > .fixed_box {
+      flex-grow: 0;
+      flex-shrink: 0;
+    }
+
+    > .auto_box {
+      flex-grow: 1;
+      flex-shrink: 1;
+    }
+  }
+
+  // 布局 多行固定 一行自适应
+  .layout_box(@direction: row) {
+    display: flex;
+    flex-direction: @direction;
+    overflow: hidden;
+    > .layout_fixed {
+      flex-grow: 0;
+      flex-shrink: 0;
+      overflow: auto;
+    }
+    > .layout_auto {
+      flex-grow: 1;
+      flex-shrink: 1;
+      overflow: auto;
+    }
+  }
+
+  
+}

@@ -1,0 +1,121 @@
+{
+  "parser": "babel-eslint",
+  "parserOptions": {
+    "sourceType": "module",
+    "experimentalDecorators": true,
+    "allowImportExportEverywhere": true,
+    "ecmaFeatures": {
+      "legacyDecorators": true
+    }
+  },
+  "extends": ["react-app", "prettier"],
+  "env": {
+    "browser": true,
+    "node": true
+  }
+  ,
+  "rules": {
+      "prettier/prettier": "error", // prettier配置
+      "react-hooks/rules-of-hooks": "error", // 检查 Hook 的规则
+      "react-hooks/exhaustive-deps": "warn", // 检查 effect 的依赖
+      // "indent": ["error",2], //缩进默认为2
+      "eqeqeq":0, // === ==的问题,老项目要慎重
+      "no-console": 0,
+      "no-var": 0,
+      "no-empty": 0,
+      "comma-dangle": 0,
+      "no-const-assign": "error",
+      "no-dupe-class-members": "error",
+      "no-dupe-args": "error",
+      "no-dupe-keys": "error",
+      "no-self-assign": "error",
+      "no-self-compare": "error",
+      "no-sequences": "error",
+      "quotes": 0,
+      "no-extra-parens": ["error", "functions"],
+      "no-use-before-define": [
+          "error",
+          {
+              "functions": false,
+              "classes": false,
+              "variables": false
+          }
+      ],
+      "no-extra-semi": "error",
+      "no-empty-pattern": "error",
+      "comma-spacing": [
+          "error",
+          {
+              "before": false,
+              "after": true
+          }
+      ],
+      "no-await-in-loop": "off",
+      "for-direction": "error",
+      "no-sparse-arrays": "error",
+      "no-debugger": "error",
+      "no-unexpected-multiline": "error",
+      "no-unreachable": "error",
+      "no-unsafe-finally": "error",
+      "no-unsafe-negation": "error",
+      "use-isnan": "error",
+      "no-alert": "error",
+      "no-fallthrough": "error",
+      "no-implied-eval": "error",
+      "no-loop-func": 0,
+      "no-redeclare": "error",
+      "no-return-await": "error",
+      "no-unmodified-loop-condition": "error",
+      "jsx-a11y/anchor-is-valid": "off",
+      "react/jsx-no-target-blank": "off",
+      "no-unused-expressions": [
+          "error",
+          {
+              "allowShortCircuit": true,
+              "allowTernary": true,
+              "allowTaggedTemplates": true
+          }
+      ],
+      "vars-on-top": "off",
+      "array-callback-return": "error",
+      "no-unused-vars": "off",
+
+    // "compat/compat": "warn",
+    // "promise/param-names": "error",
+    // "promise/always-return": "error",
+    // "promise/catch-or-return": "error",
+
+    "react/sort-comp": [
+      "warn",
+      {
+        "order": [
+          "type-annotations",
+          "static-methods",
+          "lifecycle",
+          "everything-else",
+          "render"
+        ]
+      }
+    ],
+    "react/jsx-no-bind": "off",
+    "react/jsx-filename-extension": [
+      "warn",
+      {
+        "extensions": [
+          ".js",
+          ".jsx"
+        ]
+      }
+    ],
+    "react/prefer-stateless-function": "warn"
+  }
+  ,
+  "plugins": [
+    "react-hooks",
+    "import",
+    // "promise",
+    // "compat",
+    "react",
+    "prettier"
+  ]
+}

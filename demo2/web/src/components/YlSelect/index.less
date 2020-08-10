@@ -1,0 +1,51 @@
+.ylSelect {
+  :global {
+    .ant-select-selection.ant-select-selection--multiple {
+      overflow: hidden;
+      height: 32px;
+      border-radius: 2px;
+
+      .ant-select-selection__rendered {
+        height: 100%;
+      }
+
+      ul {
+        display: flex;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+
+        li.ant-select-selection__choice {
+          flex-shrink: 0;
+          display: inline;
+          // padding: 0;
+          // border: none;
+          // background: none;
+          // > div {
+          //   display: inline;
+          // }
+          // .ant-select-selection__choice__remove {
+          //   display: none;
+          // }
+        }
+      }
+    }
+
+    // .ant-select-selection__rendered {
+    //     height: 30px;
+    //     overflow: hidden;
+
+    //     ul {
+    //         display: flex;
+    //         flex-direction: row;
+    //         overflow: hidden;
+    //         // flex-wrap: wrap;
+
+    //         li {
+    //             flex-grow: 0;
+    //             flex-shrink: 0;
+    //         }
+    //     }
+    // }
+  }
+}

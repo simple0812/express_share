@@ -1,0 +1,111 @@
+.groupTreeWrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  .searchWrapper {
+    text-align: right;
+    position: relative;
+    height: 32px;
+    padding: 14px 14px 0 14px;
+    .title {
+      width: 100%;
+      height: 24px;
+      line-height: 24px;
+      text-align: left;
+      font-size: 14px;
+      font-family: PingFangSC-Medium, PingFang SC;
+      font-weight: 500;
+      color: rgba(0, 0, 0, 0.85);
+      position: absolute;
+    }
+    .search {
+      display: flex;
+    }
+    :global {
+      .ant-input-search {
+        .ant-input {
+          position: absolute;
+          right: 0;
+          border-radius: 16px;
+        }
+      }
+      .ant-input-prefix,
+      .ant-input-suffix {
+        top: 16px;
+      }
+    }
+  }
+  .treeWrapper {
+    flex: 1;
+    padding: 0 6px;
+    margin-top: 6px;
+    height: calc(100% - 78px);
+    overflow: auto;
+    :global {
+      .ant-tree {
+        .ant-tree-node-content-wrapper {
+          width: calc(100% - 22px);
+          .ant-tree-title {
+            width: 100%;
+            display: flex;
+            .treenodeTitle {
+              width: 100%;
+              overflow: hidden;
+              text-overflow: ellipsis;
+              white-space: nowrap;
+              display: inline-block;
+              vertical-align: top;
+              .name {
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                width: calc(100% - 46px);
+                display: inline-block;
+                vertical-align: top;
+              }
+              .matchCount {
+                width: 46px;
+                text-align: right;
+                margin-top: 4px;
+                display: inline-block;
+                vertical-align: top;
+                height: 16px;
+                border-radius: 8px;
+                background-color: #95a1b7;
+                color: #fff;
+                font-size: 12px;
+                line-height: 16px;
+                padding: 0 4px;
+              }
+            }
+          }
+        }
+        .ant-tree-node-selected {
+          .matchCount {
+            background-color: @primary-color !important;
+          }
+        }
+      }
+    }
+  }
+  .operateWrapper {
+    height: 40px;
+    height: 40px;
+    background: rgba(250, 252, 255, 1);
+    border-radius: 0px 0px 4px 4px;
+    display: flex;
+    .operateItem {
+      flex: 1;
+      display: inline-block;
+      height: 16px;
+      border-right: 1px solid rgba(149, 161, 183, 1);
+      line-height: 16px;
+      text-align: center;
+      margin-top: 12px;
+      cursor: pointer;
+    }
+    .operateItem:last-child {
+      border-right: none;
+    }
+  }
+}
