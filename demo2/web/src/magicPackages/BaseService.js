@@ -28,8 +28,8 @@ export default class BaseService {
       // create:`/${moduleName}/create`,
       // update:`/${moduleName}/update`,
       // multiUpdate:`/${moduleName}/update`,
-      // delete:`/${moduleName}/delete`,
-      // multiDelete: {url: `/${moduleName}/delete`, method:'post', formatParams: ''},
+      // remove:`/${moduleName}/remove`,
+      // multiRemove: {url: `/${moduleName}/remove`, method:'post', formatParams: ''},
       ...apiMap
     };
     this.methodMap = {

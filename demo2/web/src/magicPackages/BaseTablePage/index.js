@@ -262,6 +262,9 @@ export default class BaseTablePage extends Component {
           let timeFormat = index === 0 ? '00:00:00' : '23:59:59';
           return val.format(`YYYY-MM-DD ${timeFormat}`)
         },
+        colProps: {}, // 组件Col的属性 用于控制组件宽度
+        labelStyle: {}, // 设置label的样式,
+        wrapperStyle: {}, // 设置组件容器的样式
         controlProps: { // 组件属性
           style: { width: 250 },
           format: 'YYYY-MM-DD'

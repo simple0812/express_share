@@ -72,7 +72,10 @@ class TestPage extends BaseTablePage {
       author: {
         label: '作者',
         controlProps: {
-          style: { width: 150 }
+          // style: { width: 150 }
+        },
+        colProps: {
+          // span: 6
         }
       },
       tableTime: {
