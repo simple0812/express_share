@@ -119,8 +119,8 @@ export default {
     if (value === 'nil') {
       value = undefined;
     }
-    if (_.isFunction(searcherData.dataFormat)) {
-      return searcherData.dataFormat(value);
+    if (_.isFunction(searcherData.convertToSearchFormat)) {
+      return searcherData.convertToSearchFormat(value);
     }
 
     return value;

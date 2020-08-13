@@ -254,17 +254,19 @@ export default class BaseTablePage extends Component {
         },
 
         getInitialValue: null, // 将初始搜索条件转为组件初始值 函数 
-        dataFormat:(val, index) => { // 将组件的值转化为搜索时需要的格式
+        convertToSearchFormat:(val, key) => { // 将组件的值转化为搜索时需要的格式
           if (!moment.isMoment(val)) {
             return val;
           }
 
-          let timeFormat = index === 0 ? '00:00:00' : '23:59:59';
+          let timeFormat = key === 'startTime' ? '00:00:00' : '23:59:59';
           return val.format(`YYYY-MM-DD ${timeFormat}`)
         },
+
         colProps: {}, // 组件Col的属性 用于控制组件宽度
         labelStyle: {}, // 设置label的样式,
         wrapperStyle: {}, // 设置组件容器的样式
+        
         controlProps: { // 组件属性
           style: { width: 250 },
           format: 'YYYY-MM-DD'
@@ -424,7 +426,7 @@ export default class BaseTablePage extends Component {
     const { globalLoading } = this.props;
     let { postTitle, isReadonly, ...restProps } = props || {};
 
-    let items = this.generateEditorFormData({isReadonly});
+    let items = this.generateEditorFormData({ isReadonly });
 
     if (_.isEmpty(items)) {
       return '';

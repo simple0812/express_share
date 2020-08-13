@@ -63,21 +63,23 @@ class TestPage extends BaseTablePage {
     };
 
     this.searchData = {
-      title: {
-        label: '标题',
-        controlProps: {
-          style: { width: 150 }
-        }
-      },
-      author: {
-        label: '作者',
-        controlProps: {
-          // style: { width: 150 }
-        },
-        colProps: {
-          // span: 6
-        }
-      },
+      // title: {
+      //   label: '标题',
+      //   controlProps: {
+      //     // style: { width: 150 }
+      //   }
+      // },
+      // author: {
+      //   label: '作者',
+      //   controlProps: {
+      //     // style: { width: 150 }
+      //   },
+      //   colProps: {
+      //     // span: 6
+      //   }
+      // },
+      title: '标题',
+      authro: '作者',
       tableTime: {
         label: '时间',
         startKey: 'queryBeginDate',
@@ -99,16 +101,16 @@ class TestPage extends BaseTablePage {
           return [];
         },
 
-        dataFormat: (val, index) => {
+        convertToSearchFormat: (val, key) => {
           if (!moment.isMoment(val)) {
             return val;
           }
 
-          // let timeFormat = index === 0 ? '00:00:00' : '23:59:59';
+          // let timeFormat = key === 'queryBeginDate' ? '00:00:00' : '23:59:59';
           return val.format(`YYYY-MM-DD`);
         },
         controlProps: {
-          style: { width: 250 },
+          // style: { width: 250 },
           format: 'YYYY-MM-DD'
         }
       }

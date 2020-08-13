@@ -25,10 +25,10 @@ export default class BaseService {
       // getList: `/${moduleName}/getList`, // 字符串表示只配置url了字段 method使用默认的配置(获取数据使用get 增删改使用post)
       // getDetail: {url: `/${moduleName}/getDetail`, method:'get', formatParams: ''},
 
-      // create:`/${moduleName}/create`,
-      // update:`/${moduleName}/update`,
-      // multiUpdate:`/${moduleName}/update`,
-      // remove:`/${moduleName}/remove`,
+      // create:postFn(`/${moduleName}/create`),
+      // update:postFn(`/${moduleName}/update`),
+      // multiUpdate:postFn(`/${moduleName}/update`),
+      // remove:postFn(`/${moduleName}/remove`),
       // multiRemove: {url: `/${moduleName}/remove`, method:'post', formatParams: ''},
       ...apiMap
     };
@@ -64,6 +64,7 @@ export default class BaseService {
 
     if (_.isFunction(xApi.url)) {
       return {
+        method: xApi.method || 'get',
         url: xApi.url(params),
         formatParams: xApi.formatParams || ''
       };
@@ -75,19 +76,9 @@ export default class BaseService {
   handleRequest = (type, params) => {
     let xApi = this.getApi(type, params) || {};
     let reqMethod = get;
-    //
+
     if (xApi.method) {
       reqMethod = this.methodMap[xApi.method.toLocaleLowerCase()] || get;
-    } else {
-      if (
-        type === 'create' ||
-        type === 'update' ||
-        type === 'multiUpdate' ||
-        type === 'remove' ||
-        type === 'multiRemove'
-      ) {
-        reqMethod = post;
-      }
     }
 
     let xParams = { ...params };

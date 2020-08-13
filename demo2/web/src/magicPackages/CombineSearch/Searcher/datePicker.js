@@ -35,8 +35,8 @@ export default {
       );
     }
 
-    if (_.isFunction(searcherData.dataFormat)) {
-      return searcherData.dataFormat(value);
+    if (_.isFunction(searcherData.convertToSearchFormat)) {
+      return searcherData.convertToSearchFormat(value);
     }
 
     return value;

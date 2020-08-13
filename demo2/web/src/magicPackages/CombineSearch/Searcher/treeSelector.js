@@ -47,8 +47,8 @@ export default {
       value = _.filter(value, (each) => each !== 'nil');
     }
 
-    if (_.isFunction(searcherData.dataFormat)) {
-      return searcherData.dataFormat(value);
+    if (_.isFunction(searcherData.convertToSearchFormat)) {
+      return searcherData.convertToSearchFormat(value);
     }
 
     return value;

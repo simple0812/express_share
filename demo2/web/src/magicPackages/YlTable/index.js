@@ -203,6 +203,7 @@ class YlTable extends React.Component {
     return col;
   };
 
+  //暂不需要支持resize
   rewriteComponents = () => {
     const { resizable } = this.props;
 

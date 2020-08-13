@@ -52,14 +52,6 @@ export default {
       return value;
     }
 
-    value = value.map((each, index) => {
-      if (_.isFunction(searcherData.dataFormat)) {
-        return searcherData.dataFormat(each, index);
-      }
-      return each.format(
-        searcherData.controlProps.format || 'YYYY-MM-DD HH:mm:ss'
-      );
-    });
     let startKey = 'startTime';
     let endKey = 'endTime';
 
@@ -67,6 +59,15 @@ export default {
       startKey = searcherData.startKey;
       endKey = searcherData.endKey;
     }
+
+    value = value.map((each, index) => {
+      if (_.isFunction(searcherData.convertToSearchFormat)) {
+        return searcherData.convertToSearchFormat(each, index === 0 ? startKey : endKey);
+      }
+      return each.format(
+        searcherData.controlProps.format || 'YYYY-MM-DD HH:mm:ss'
+      );
+    });
 
     conditions[startKey] = value[0];
     conditions[endKey] = value[1];
