@@ -10,9 +10,9 @@ class BlogService extends BaseService {
         formatParams: ''
       },
 
-      create: `/api/v1/blog/create`,
-      update: `/api/v1/blog/update`,
-      multiUpdate: `/api/v1/blog/update`,
+      create: postFn(`/api/v1/blog/create`),
+      update: postFn(`/api/v1/blog/update`),
+      multiUpdate: postFn(`/api/v1/blog/update`),
       remove: postFn(`/api/v1/blog/remove`)
     });
   }

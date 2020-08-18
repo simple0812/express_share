@@ -1,46 +1,28 @@
-import React, { Component } from 'react';
-import { Input, Button, Modal } from 'antd';
+import React from 'react';
+import { Button } from 'antd';
 import _ from 'lodash';
 import moment from 'moment';
 
-import { inject, observer } from 'mobx-react';
+import BaseTablePage from './index';
 
-import BaseTablePage from '@/magicPackages/BaseTablePage';
-import { downloadFile } from '@/utils';
+import styles from './page.less';
 
-import styles from './index.less';
-
-@inject((store) => {
-  return {
-    blogStore: store.blogStore,
-    globalLoading: store.blogStore.globalLoading
-  };
-})
-@observer
-class TestPage extends BaseTablePage {
-  constructor(props) {
-    super(props);
-    this.store = props.blogStore;
-    this.primaryKey = 'id';
-    this.fieldMap = {
-      ...this.fieldMap,
-      batchRemoveIds: 'id'
+// 注：继承SimplePage后 一定要传入store 并且赋值给this.store
+class SimplePage extends BaseTablePage {
+  constructor(props, initOptions) {
+    let xInitOptions = {
+      fieldMap: {
+        batchRemoveIds: 'id'
+      },
+      primaryKey: 'id',
+      initSearchConditions: {},
+      ...initOptions
     };
 
-    let xDate = moment().format('YYYY-MM-DD');
-
-    // 预置的搜索条件
-    this.initSearchConditions = {
-      queryBeginDate: `${xDate}`,
-      queryEndDate: `${xDate}`
-    };
+    super(props, xInitOptions);
 
     this.state = {
-      ...this.state,
-
-      searchConditions: {
-        ...this.initSearchConditions
-      }
+      ...this.state
     };
 
     this.columnData = {
@@ -220,24 +202,9 @@ class TestPage extends BaseTablePage {
     this.fetchData();
   }
 
-  export = () => {
-    let params = this.getSearchConditions();
-    const {
-      pageConditions: { current, pageSize }
-    } = this.state;
-
-    let url =
-      '/efficiency/service/quality/PersonalEffectivenessListExport.json';
-    downloadFile(url, '热线参数满意度监察.csv', {
-      ...params,
-      current,
-      pageSize
-    });
-  };
-
   render() {
     return (
-      <div className={styles.testPage} style={{ padding: 24 }}>
+      <div className={styles.simplePage} style={{ padding: 24 }}>
         <div className="header-search">
           <div className="header-search__left">
             {this.renderSearch({
@@ -274,4 +241,4 @@ class TestPage extends BaseTablePage {
   }
 }
 
-export default TestPage;
+export default SimplePage;

@@ -1,5 +1,5 @@
 import { observable, flow, extendObservable, isObservableProp } from 'mobx';
-import message from '@/components/Message';
+import message from '@/components/message';
 import _ from 'lodash';
 import axios from 'axios';
 const CancelToken = axios.CancelToken;

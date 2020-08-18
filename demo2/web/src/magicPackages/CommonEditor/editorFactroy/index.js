@@ -7,6 +7,7 @@ import radioGroup from './groupRadio';
 import rangePicker from './rangePicker';
 import timePicker from './timePicker';
 import cascader from './cascader';
+import treeSelect from './treeSelect';
 import _ from 'lodash';
 
 export default function editorFactroy(type = 'input') {
@@ -39,6 +40,9 @@ export default function editorFactroy(type = 'input') {
       break;
     case 'radio':
       ctrl = radioGroup;
+      break;
+    case 'treeSelect':
+      ctrl = treeSelect;
       break;
     default:
       ctrl.control = 'input';

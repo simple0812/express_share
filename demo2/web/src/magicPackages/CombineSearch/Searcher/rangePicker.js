@@ -62,7 +62,10 @@ export default {
 
     value = value.map((each, index) => {
       if (_.isFunction(searcherData.convertToSearchFormat)) {
-        return searcherData.convertToSearchFormat(each, index === 0 ? startKey : endKey);
+        return searcherData.convertToSearchFormat(
+          each,
+          index === 0 ? startKey : endKey
+        );
       }
       return each.format(
         searcherData.controlProps.format || 'YYYY-MM-DD HH:mm:ss'

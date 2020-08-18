@@ -6,7 +6,7 @@ class SearchItemWrapper extends Component {
   render() {
     const { model = {}, children } = this.props;
     let xStyle = {};
-    let wrapperStyle = {...model.wrapperStyle};
+    let wrapperStyle = { ...model.wrapperStyle };
 
     // 如果组件设置定宽 则 需要重置col和wrapper的样式属性
     if (_.get(model, 'controlProps.style.width')) {

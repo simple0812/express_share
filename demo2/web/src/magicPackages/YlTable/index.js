@@ -77,7 +77,6 @@ class YlTable extends React.Component {
     };
   }
 
-
   handleResize = (index) => (e, { size }) => {
     e.preventDefault();
     e.stopPropagation();

@@ -4,30 +4,40 @@ import _ from 'lodash';
 import Table from '../YlTable';
 import CombineSearch from '../CombineSearch';
 import CommonEditor from '../CommonEditor';
-import message from '@/components/Message';
+import message from '@/components/message';
 import { toJS } from 'mobx';
 
 export default class BaseTablePage extends Component {
-  constructor(props) {
+  constructor(
+    props,
+    { fieldMap, primaryKey, initSearchConditions, pageConditions } = {}
+  ) {
     super(props);
     this.fieldMap = {
       dataList: 'dataList', // 数据源
       currentPage: 'currentPage', // 当前页数
       pageSize: 'pageSize', // 每页条数
 
-      batchRemoveIds: 'ids' // 删除时候传参
+      batchRemoveIds: 'ids', // 删除时候传参
+      ...fieldMap
     };
 
-    this.primaryKey = 'id'; // 主键
+    this.primaryKey = primaryKey || 'id'; // 主键
+    this.initSearchConditions = {
+      ...initSearchConditions
+    };
     this.state = {
       editVisible: false, //编辑框是否可见
-      searchConditions: {},
+      searchConditions: {
+        ...initSearchConditions
+      },
       pageConditions: {
         // sort: 0,
         // sortBy: '',
         pageSize: 10,
         current: 1,
-        total: 1
+        total: 1,
+        ...pageConditions
       }
     };
   }

@@ -1,6 +1,6 @@
 var _ = require("lodash");
 var Sequelize = require("sequelize");
-var moment = require('moment');
+var moment = require("moment");
 var jsonHelper = require("../../utils/jsonHelper");
 var logger = require("../../utils/logger");
 
@@ -9,7 +9,7 @@ var models = require("../../models");
 exports.page = async function (req, res) {
   let query = req.query || {};
 
-  console.log('qeury', req.query)
+  console.log("qeury", req.query);
   var pageSize = +query.pageSize || 10;
   var pageIndex = +query.pageIndex || 1;
   var firNum = (pageIndex - 1) * pageSize;
@@ -32,10 +32,14 @@ exports.page = async function (req, res) {
   if (author.trim()) {
     // xquery.where.author = { [Sequelize.Op.like]: "%" + author + "%" };
     xquery.where.author = author;
-
   }
   if (queryBeginDate && queryEndDate) {
-    xquery.where.created_at = {$between:[moment(`${queryBeginDate} 00:00:00`).valueOf(), moment(`${queryEndDate} 23:59:59`).valueOf()]}
+    xquery.where.created_at = {
+      $between: [
+        moment(`${queryBeginDate} 00:00:00`).valueOf(),
+        moment(`${queryEndDate} 23:59:59`).valueOf(),
+      ],
+    };
   }
 
   try {
@@ -44,6 +48,26 @@ exports.page = async function (req, res) {
     var docs = result.rows;
     var count = result.count;
     res.json(jsonHelper.pageSuccess(docs, count));
+  } catch (e) {
+    res.json(jsonHelper.getError(err.message));
+  }
+};
+
+exports.getDetail = async function (req, res) {
+  let query = req.query || {};
+
+  let id = query.id || "";
+  let xquery = {
+    raw: true,
+    where: {
+      id,
+    },
+  };
+
+  try {
+    let result = await models.Blog.findOne(xquery);
+
+    res.json(jsonHelper.pageSuccess(result));
   } catch (e) {
     res.json(jsonHelper.getError(err.message));
   }
@@ -121,11 +145,10 @@ exports.baz = function (req, res) {
   res.json(jsonHelper.getSuccess("baz"));
 };
 
+exports.re = function (req, res) {
+  res.redirect("/ve");
+};
 
-exports.re = function(req, res) {
-  res.redirect('/ve')
-}
-
-exports.ve = function(req, res) {
-  res.text
-}
+exports.ve = function (req, res) {
+  res.text;
+};

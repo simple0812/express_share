@@ -23,5 +23,6 @@ router.get('/blog/getList', getpermission, guest, ctrl.page);
 router.post('/blog/create', ctrl.create);
 router.post('/blog/update', ctrl.update);
 router.post('/blog/remove', ctrl.remove);
+router.post('/blog/getDetail', ctrl.getDetail);
 
 module.exports = router;
