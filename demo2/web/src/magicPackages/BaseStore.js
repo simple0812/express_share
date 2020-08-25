@@ -1,5 +1,5 @@
 import { observable, flow, extendObservable, isObservableProp } from 'mobx';
-import message from '@/components/message';
+import message from '@/components/Message';
 import _ from 'lodash';
 import axios from 'axios';
 const CancelToken = axios.CancelToken;
@@ -65,10 +65,9 @@ class BaseStore {
         // eslint-disable-next-line
         function* gen(...args) {
           let temp = tMethods[methodName] || {};
-          if (_.isFunction(temp.serviceMethodName)) {
-            throw new Error(
-              `service.${temp.serviceMethodName} is not function`
-            );
+          let sMethod = temp.serviceMethodName || methodName;
+          if (_.isFunction(sMethod)) {
+            throw new Error(`${methodName} service.${sMethod} is not function`);
           }
 
           // 暂不支持取消
@@ -79,7 +78,7 @@ class BaseStore {
 
           let xService = temp.service || this.service;
 
-          const res = yield xService[temp.serviceMethodName](...args);
+          const res = yield xService[sMethod](...args);
           let { code, data, message: msg } = res || {};
 
           // 响应异常
@@ -144,7 +143,6 @@ class BaseStore {
 
         return data;
       } catch (e) {
-        console.error('flowWithLoading error: ', e);
         if (_.isObject(_this.globalLoading)) {
           _this.globalLoading = Object.assign({}, _this.globalLoading, {
             [effectName]: 'error',

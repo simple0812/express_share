@@ -1,3 +1,5 @@
+/** 编辑有一定的性能问题 大于50个字段需要谨慎使用*/
+
 import defaultEditor from './defaultEditor';
 import inputEditor from './input';
 import select from './select';
@@ -8,6 +10,8 @@ import rangePicker from './rangePicker';
 import timePicker from './timePicker';
 import cascader from './cascader';
 import treeSelect from './treeSelect';
+import draggerUpload from './draggerUpload';
+import tree from './tree';
 import _ from 'lodash';
 
 export default function editorFactroy(type = 'input') {
@@ -20,16 +24,19 @@ export default function editorFactroy(type = 'input') {
     case 'input':
       ctrl = inputEditor;
       break;
+    case 'tree':
+      ctrl = tree;
+      break;
     case 'select':
       ctrl = select;
       break;
-    case 'cascader':
+    case 'cascader': // 未验证 谨慎使用
       ctrl = cascader;
       break;
     case 'rangePicker':
       ctrl = rangePicker;
       break;
-    case 'timePicker':
+    case 'timePicker': // 未验证 谨慎使用
       ctrl = timePicker;
       break;
     case 'textarea':
@@ -43,6 +50,9 @@ export default function editorFactroy(type = 'input') {
       break;
     case 'treeSelect':
       ctrl = treeSelect;
+      break;
+    case 'draggerUpload': // 未验证 谨慎使用
+      ctrl = draggerUpload;
       break;
     default:
       ctrl.control = 'input';

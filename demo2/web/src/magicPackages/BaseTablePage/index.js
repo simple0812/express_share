@@ -1,16 +1,30 @@
+/**
+ * 覆写基类方式的时候 如果需要先调用基类的方法 有2中模式
+ * 1.在constructor中 定义一个变量指向基类的方法 在覆写方法里面调用该变量
+ * 2.基类方法使用具名函数(如生命周期函数) 子类覆写时候使用super.methodName()调用。(箭头函数是匿名函数 不可使用)
+ * 3.覆写时 如不需调用基类方法 可随意发挥
+ */
 import React, { Component } from 'react';
 import _ from 'lodash';
-
+import { Modal, Popconfirm } from 'antd';
 import Table from '../YlTable';
 import CombineSearch from '../CombineSearch';
-import CommonEditor from '../CommonEditor';
-import message from '@/components/message';
+import CommonEditor, { generateEditorFormData } from '../CommonEditor';
+import message from '@/components/Message';
 import { toJS } from 'mobx';
 
 export default class BaseTablePage extends Component {
   constructor(
     props,
-    { fieldMap, primaryKey, initSearchConditions, pageConditions } = {}
+    {
+      fieldMap, // 字段映射
+      primaryKey, // 主键
+      initSearchConditions, // 初始查询条件
+      shouldGetDetailWhenEdit, // 编辑时是否需要发送请求获取详情
+      shouldGetDetailWhenShowDetail, // 显示详情时是否需要发送请求获取详情
+      queryConditions, // 其他参数(如url传递过来的)
+      pageConditions //分页参数
+    } = {}
   ) {
     super(props);
     this.fieldMap = {
@@ -22,14 +36,20 @@ export default class BaseTablePage extends Component {
       ...fieldMap
     };
 
-    this.primaryKey = primaryKey || 'id'; // 主键
+    this.primaryKey = primaryKey || 'id';
     this.initSearchConditions = {
       ...initSearchConditions
     };
+
+    this.shouldGetDetailWhenEdit = !!shouldGetDetailWhenEdit;
+    this.shouldGetDetailWhenShowDetail = !!shouldGetDetailWhenShowDetail;
     this.state = {
       editVisible: false, //编辑框是否可见
       searchConditions: {
         ...initSearchConditions
+      },
+      queryConditions: {
+        ...queryConditions
       },
       pageConditions: {
         // sort: 0,
@@ -48,7 +68,8 @@ export default class BaseTablePage extends Component {
     this.setState(
       {
         searchConditions: evt || {},
-        pageConditions
+        pageConditions,
+        selectedRowKeys: []
       },
       () => {
         this.fetchData();
@@ -91,20 +112,22 @@ export default class BaseTablePage extends Component {
     }
   };
 
-  // 页面查询参数
+  // 列表搜索参数由3部分构成 分页参数、搜索参数、其他参数(如url传递过来的)
   getPageParams = () => {
     let {
       pageConditions: { current, pageSize, sort, sortBy } = {},
-      searchConditions
+      searchConditions,
+      queryConditions
     } = this.state;
 
     let xParams = {
       [this.fieldMap.currentPage]: current,
       [this.fieldMap.pageSize]: pageSize,
-      ...searchConditions
+      ...searchConditions,
+      ...queryConditions
     };
 
-    if (!_.isUndefined(sort)) {
+    if (sort) {
       xParams.sortBy = sortBy;
       xParams.sort = sort === 'descend' ? 0 : 1;
     }
@@ -132,7 +155,7 @@ export default class BaseTablePage extends Component {
     }
 
     this.store
-      .getList(xParams)
+      .getList({ ...xParams })
       .then((res) => {
         this.setState({
           pageConditions: {
@@ -145,6 +168,17 @@ export default class BaseTablePage extends Component {
         return res;
       })
       .catch((e) => {});
+  };
+
+  getDetail = (params) => {
+    return this.store
+      .getDetail({ [this.primaryKey]: params[this.primaryKey] })
+      .then((res) => {
+        if (res && res.success) {
+          return Promise.resolve(res.data);
+        }
+        throw new Error(_.get(res, 'message') || '获取详情失败');
+      });
   };
 
   handleRemove = (record) => {
@@ -160,6 +194,7 @@ export default class BaseTablePage extends Component {
         pageConditions.current = 1;
         this.setState(
           {
+            selectedRowKeys: [],
             pageConditions
           },
           this.fetchData
@@ -175,19 +210,28 @@ export default class BaseTablePage extends Component {
     if (_.isEmpty(selectedRowKeys)) {
       return message.warning('请选择需要删除的项目');
     }
-    this.store
-      .remove({
-        [this.fieldMap.batchRemoveIds]: (selectedRowKeys || []).join(',')
-      })
-      .then((res) => {
-        pageConditions.current = 1;
-        this.setState(
-          {
-            pageConditions
-          },
-          this.fetchData
-        );
-      });
+    let _this = this;
+
+    Modal.confirm({
+      title: '确定要删除选中的项目?',
+      onOk() {
+        _this.store
+          .remove({
+            [_this.fieldMap.batchRemoveIds]: (selectedRowKeys || []).join(',')
+          })
+          .then((res) => {
+            pageConditions.current = 1;
+            _this.setState(
+              {
+                selectedRowKeys: [],
+                pageConditions
+              },
+              _this.fetchData
+            );
+          });
+      },
+      onCancel() {}
+    });
   };
 
   handleShowEdit = (record) => {
@@ -195,22 +239,36 @@ export default class BaseTablePage extends Component {
       currentModel: record,
       editVisible: true
     });
+
+    if (_.isEmpty(record)) {
+      return;
+    }
+
+    if (this.shouldGetDetailWhenEdit) {
+      this.getDetail(record).then((res) => {
+        this.setState({
+          currentModel: res
+        });
+      });
+    }
   };
 
-  handleSave = (params) => {
-    const { update, create } = this.store;
+  handleSave = (params, model) => {
+    const { update, create, currentModel } = this.store;
     const { pageConditions = {} } = this.state;
 
     let method = create;
     let operate = '添加';
+    let xParams = { ...params };
 
     // 根据是否含有主键来判断是新增还是更新
-    if (params && params[this.primaryKey]) {
+    if (model && model[this.primaryKey]) {
       method = update;
+      xParams[this.primaryKey] = model[this.primaryKey];
       operate = '编辑';
     }
 
-    return method(params).then((res) => {
+    return method(xParams).then((res) => {
       if (!res || +res.code !== 200) {
         throw new Error(_.get(res, 'message') || `${operate}失败`);
       }
@@ -243,6 +301,18 @@ export default class BaseTablePage extends Component {
       currentModel: record,
       detailVisible: true
     });
+
+    if (_.isEmpty(record)) {
+      return;
+    }
+
+    if (this.shouldGetDetailWhenShowDetail) {
+      this.getDetail(record).then((res) => {
+        this.setState({
+          currentModel: res
+        });
+      });
+    }
   };
 
   /**
@@ -320,6 +390,73 @@ export default class BaseTablePage extends Component {
     return ret;
   };
 
+  getOperateColumn = ({
+    onShowDetail,
+    onShowEdit,
+    onRemove,
+    getExtraOperateColumns,
+    operateColumnProps = {}
+  }) => {
+    if (
+      !_.isFunction(onShowDetail) &&
+      !_.isFunction(onShowEdit) &&
+      !_.isFunction(onRemove) &&
+      !_.isFunction(getExtraOperateColumns)
+    ) {
+      return;
+    }
+
+    let col = {
+      title: '操作',
+      dataIndex: 'optionColumn',
+      fixed: _.isUndefined(operateColumnProps.fixed)
+        ? 'right'
+        : operateColumnProps.fixed,
+      key: 'optionColumn',
+      width: _.get(operateColumnProps, 'width') || 150,
+      render: (text, record, index) => {
+        return (
+          <span className="table_operation">
+            {_.isFunction(onShowDetail) && (
+              <span
+                style={{ margin: '0 5px', cursor: 'pointer', color: '#00B9EF' }}
+                onClick={onShowDetail.bind(this, record)}>
+                查看
+              </span>
+            )}
+            {_.isFunction(onShowEdit) && (
+              <span
+                style={{ margin: '0 5px', cursor: 'pointer', color: '#00B9EF' }}
+                onClick={onShowEdit.bind(this, record)}>
+                编辑
+              </span>
+            )}
+            {_.isFunction(onRemove) && (
+              <Popconfirm
+                title="确定删除？"
+                onConfirm={onRemove.bind(this, record)}
+                okText="确定"
+                cancelText="取消">
+                <span
+                  style={{
+                    margin: '0 5px',
+                    cursor: 'pointer',
+                    color: '#00B9EF'
+                  }}>
+                  删除
+                </span>
+              </Popconfirm>
+            )}
+            {_.isFunction(getExtraOperateColumns) &&
+              getExtraOperateColumns(text, record, index)}
+          </span>
+        );
+      }
+    };
+
+    return col;
+  };
+
   renderTable = ({
     resizable,
     selectable,
@@ -330,6 +467,7 @@ export default class BaseTablePage extends Component {
     isFullScreen,
     rowSelection,
     operateColumnProps,
+    getExtraOperateColumns,
     ...restProps
   } = {}) => {
     const { globalLoading } = this.store;
@@ -344,36 +482,48 @@ export default class BaseTablePage extends Component {
         }
       };
     }
+    let xDataSource = toJS(this.store[this.fieldMap.dataList]);
+
+    let xColumnData = this.columnData || {};
+
+    let operateCol = this.getOperateColumn({
+      onShowDetail,
+      onShowEdit,
+      onRemove,
+      getExtraOperateColumns,
+      operateColumnProps
+    });
+
+    if (operateCol) {
+      xColumnData.optionColumn = operateCol;
+    }
 
     let tableProps = {
       selectable,
       className: 'common-table',
-      dataSource: toJS(this.store[this.fieldMap.dataList]),
+      dataSource: xDataSource,
       resizable: !!resizable,
       loading: globalLoading.getList === 'pending',
       isFullScreen: !!isFullScreen,
-      // columns: xCol,
-      operateColumnProps,
       onChange: this.handleChange,
-
-      onRemove: onRemove,
-      onShowEdit: onShowEdit,
-      onShowDetail: onShowDetail,
       rowSelection: rowSelection,
 
       getRowKey: this.primaryKey,
-      columnData: this.columnData || {},
+      columnData: xColumnData,
 
-      pagination: {
-        current: current,
-        pageSize: pageSize,
-        total: total,
-        size: 'small',
-        showQuickJumper: true,
-        showSizeChanger: true,
-        hideOnSinglePage: false,
-        showTotal: (total) => `共 ${total}, 条`
-      },
+      // 没有数据不显示分页插件
+      pagination: _.isEmpty(xDataSource)
+        ? false
+        : {
+            current: current,
+            pageSize: pageSize,
+            total: total,
+            size: 'small',
+            showQuickJumper: true,
+            showSizeChanger: true,
+            hideOnSinglePage: false,
+            showTotal: (total) => `共 ${total} 条`
+          },
 
       ...restProps
     };
@@ -384,9 +534,9 @@ export default class BaseTablePage extends Component {
   renderSearch = (props) => {
     let items = this.getSearchDataFrom();
 
-    if (_.isEmpty(items)) {
-      return '';
-    }
+    // if (_.isEmpty(items)) {
+    //   return '';
+    // }
 
     return (
       <CombineSearch
@@ -398,57 +548,28 @@ export default class BaseTablePage extends Component {
     );
   };
 
-  generateEditorFormData = ({ isReadonly } = {}) => {
-    if (_.isEmpty(this.editorData)) {
-      return [];
-    }
-    let ret = [];
-    _.keys(this.editorData).forEach((key, index) => {
-      let val = this.editorData[key];
-
-      if (_.isString(val)) {
-        val = {
-          label: val,
-          fieldDecorator: {},
-          controlProps: {
-            disabled: isReadonly
-          }
-        };
-      } else {
-        val.controlProps = {
-          ...val.controlProps,
-          disabled: isReadonly
-        };
-      }
-
-      ret.push({
-        id: key,
-        sort: index,
-        ...val
-      });
-    });
-
-    return ret;
-  };
-
   renderEditor = (props) => {
     const { editVisible, currentModel } = this.state;
     const { globalLoading } = this.props;
     let { postTitle, isReadonly, ...restProps } = props || {};
 
-    let items = this.generateEditorFormData({ isReadonly });
+    let items = generateEditorFormData.call(this, {
+      isReadonly,
+      editorData: this.editorData
+    });
 
     if (_.isEmpty(items)) {
       return '';
     }
 
     let isUpdate = !!_.get(currentModel, this.primaryKey);
+
     return (
       <CommonEditor
         title={`${isUpdate ? '编辑' : '添加'}${postTitle}`}
         editorItems={items}
         visible={editVisible}
-        globalLoading={globalLoading}
+        // globalLoading={globalLoading}
         onClose={this.toggleEditVisible}
         onSave={this.handleSave}
         isUpdate={isUpdate}

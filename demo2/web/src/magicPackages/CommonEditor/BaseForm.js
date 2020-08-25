@@ -19,9 +19,10 @@ export default class BaseForm extends React.Component {
 
     _.keys(conditions).forEach((key) => {
       var val = conditions[key];
-      let searcherData = _.find(editorItems, (each) => each.id === key) || {};
-      if (_.isFunction(searcherData.parseValue)) {
-        conditions[key] = searcherData.parseValue(val, searcherData, {
+      let source = _.find(editorItems, (each) => each.id === key) || {};
+      if (_.isFunction(source.convertControlToModel)) {
+        conditions[key] = source.convertControlToModel(val, {
+          source,
           props: this.props,
           conditions,
           key
@@ -40,9 +41,10 @@ export default class BaseForm extends React.Component {
 
     _.keys(conditions).forEach((key) => {
       var val = conditions[key];
-      let searcherData = _.find(editorItems, (each) => each.id === key) || {};
-      if (_.isFunction(searcherData.validate)) {
-        let msg = searcherData.validate(val, searcherData, {
+      let source = _.find(editorItems, (each) => each.id === key) || {};
+      if (_.isFunction(source.validate)) {
+        let msg = source.validate(val, {
+          source,
           props: this.props,
           conditions,
           key
@@ -72,7 +74,7 @@ export default class BaseForm extends React.Component {
         return;
       }
 
-      let promise = onSave(params);
+      let promise = onSave(params, this.props.model);
 
       if (
         promise &&
@@ -103,10 +105,9 @@ export default class BaseForm extends React.Component {
           reject(new Error(errMsg));
           return;
         }
-        const { model } = this.props;
 
         let xParams = this.getSearchConditions();
-        let params = { ...model, ...xParams };
+        let params = { ...xParams };
 
         resolve(params);
       });

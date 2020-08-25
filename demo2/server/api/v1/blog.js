@@ -11,7 +11,7 @@ exports.page = async function (req, res) {
 
   console.log("qeury", req.query);
   var pageSize = +query.pageSize || 10;
-  var pageIndex = +query.pageIndex || 1;
+  var pageIndex = +query.currentPage || 1;
   var firNum = (pageIndex - 1) * pageSize;
   var title = query.title || "";
   var author = query.author || "";
@@ -83,9 +83,7 @@ exports.create = function (req, res) {
     return res.json(jsonHelper.getError("title is empty"));
   }
 
-  if (!p.summary) {
-    return res.json(jsonHelper.getError("summary is empty"));
-  }
+
 
   p.id = p.id || null;
 
@@ -108,9 +106,7 @@ exports.update = function (req, res) {
     return res.json(jsonHelper.getError("title is empty"));
   }
 
-  if (!p.summary) {
-    return res.json(jsonHelper.getError("summary is empty"));
-  }
+
 
   if (!p.id) {
     return res.json(jsonHelper.getError("id is empty"));

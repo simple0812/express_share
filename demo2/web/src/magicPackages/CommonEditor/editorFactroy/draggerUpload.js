@@ -1,21 +1,12 @@
 import defaultEditor from './defaultEditor';
-import { Radio } from 'antd';
 import _ from 'lodash';
+import DraggerUpload from '../components/DraggerUpload';
 
 export default function (source, props) {
-  source.control = Radio.Group;
-  source.controlProps = { ...source.controlProps };
-  if (source.options && !source.controlProps.options) {
-    let xOptions = [];
-
-    if (_.isFunction(source.options)) {
-      xOptions = source.options({ source, props }) || [];
-    } else {
-      xOptions = [...source.options];
-    }
-
-    source.controlProps.options = [...xOptions];
-  }
+  source.control = DraggerUpload;
+  source.controlProps = {
+    ...source.controlProps
+  };
 
   if (source.required) {
     source.fieldDecorator = source.fieldDecorator || {};
@@ -29,6 +20,5 @@ export default function (source, props) {
       });
     }
   }
-
   return defaultEditor(source, props);
 }

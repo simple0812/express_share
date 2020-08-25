@@ -23,8 +23,8 @@ export default function (source, props) {
     }
   }
 
-  if (!_.isFunction(source.parseValue)) {
-    source.parseValue = (val, source, { conditions }) => {
+  if (!_.isFunction(source.convertControlToModel)) {
+    source.convertControlToModel = (val, { source, props, conditions }) => {
       let startKey = source.startKey || 'startTime';
       let endKey = source.endKey || 'endTime';
 
@@ -39,16 +39,30 @@ export default function (source, props) {
     };
   }
 
-  if (!_.isFunction(source.getInitialValue)) {
+  if (!_.isFunction(source.convertModelToControl)) {
     let startKey = source.startKey || 'startTime';
     let endKey = source.endKey || 'endTime';
 
-    source.getInitialValue = ({ model, isUpdate }) => {
+    source.convertModelToControl = (val, { source, props }) => {
+      let { isUpdate, model } = props || {};
+
+      console.log('model', model);
       return isUpdate && model && model[startKey] && model[endKey]
         ? [moment(model[startKey]), moment(model[endKey])]
         : undefined;
     };
   }
+
+  // if (!_.isFunction(source.getInitialValue)) {
+  //   let startKey = source.startKey || 'startTime';
+  //   let endKey = source.endKey || 'endTime';
+
+  //   source.getInitialValue = ({ model, isUpdate }) => {
+  //     return isUpdate && model && model[startKey] && model[endKey]
+  //       ? [moment(model[startKey]), moment(model[endKey])]
+  //       : undefined;
+  //   };
+  // }
 
   return defaultEditor(source, props);
 }

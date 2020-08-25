@@ -89,7 +89,7 @@ export default {
         )(
           <Select
             optionFilterProp="children"
-            dropdownStyle={{ fontSize: '12px' }}
+            dropdownStyle={{ textAlign: 'left' }}
             style={{ width: '100%', ...style }}
             allowClear
             placeholder="请选择"

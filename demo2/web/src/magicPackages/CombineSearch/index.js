@@ -92,7 +92,7 @@ class CombineSearch extends React.Component {
           'combine-search-container'
         )}>
         <Form className="searchForm" onSubmit={this.handleSubmit}>
-          <Row gutter={10}>
+          <Row gutter={10} style={{ paddingRight: 5 }}>
             {combineSearchItems.map((source) => {
               source.control = source.control || 'input';
               source.fieldDecorator = source.fieldDecorator || {};
@@ -106,12 +106,17 @@ class CombineSearch extends React.Component {
             <div
               className="combine-search-cmd-container"
               style={{ ...cmdContainerStyle }}>
-              <Button onClick={this.handleReset} style={{ margin: '0 5px' }}>
-                重置
-              </Button>
-              <Button type="primary" onClick={this.handleSubmit}>
-                搜索
-              </Button>
+              {!_.isEmpty(combineSearchItems) && (
+                <Button onClick={this.handleReset} style={{ margin: '0 5px' }}>
+                  重置
+                </Button>
+              )}
+              {!_.isEmpty(combineSearchItems) && (
+                <Button type="primary" onClick={this.handleSubmit}>
+                  搜索
+                </Button>
+              )}
+
               {this.props.restButton}
             </div>
           </Row>

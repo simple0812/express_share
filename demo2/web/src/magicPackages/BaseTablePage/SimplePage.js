@@ -2,6 +2,7 @@ import React from 'react';
 import { Button } from 'antd';
 import _ from 'lodash';
 import moment from 'moment';
+import cn from 'classnames';
 
 import BaseTablePage from './index';
 
@@ -202,24 +203,28 @@ class SimplePage extends BaseTablePage {
     this.fetchData();
   }
 
+  renderOperateButton() {
+    return (
+      <Button type="primary" onClick={this.handleShowEdit.bind(this, null)}>
+        添加
+      </Button>
+    );
+  }
+
   render() {
     return (
-      <div className={styles.simplePage} style={{ padding: 24 }}>
+      <div className={cn(styles.simplePage, this.pageClass)}>
         <div className="header-search">
           <div className="header-search__left">
+            {this.pageTitle && (
+              <span className="page-title">{this.pageTitle || ''}</span>
+            )}
+          </div>
+          <div className="header-search__right">
             {this.renderSearch({
-              restButton: (
-                <Button
-                  type="primary"
-                  ghost
-                  onClick={this.handleShowEdit.bind(this, null)}
-                  style={{ marginLeft: 8 }}>
-                  添加
-                </Button>
-              )
+              restButton: this.renderOperateButton.call(this)
             })}
           </div>
-          {/* <div className="header-search__right"></div> */}
         </div>
 
         <div className="page-body">
@@ -227,14 +232,14 @@ class SimplePage extends BaseTablePage {
             onRemove: this.handleRemove,
             onShowEdit: this.handleShowEdit,
             // resizable: true,
-            selectable: true,
+            selectable: this.selectable,
             // operateColumnProps: { width: 100, fixed: false },
 
             isFullScreen: true // autosizer 需要配合position:relative使用
           })}
         </div>
         {this.renderEditor({
-          postTitle: '博客'
+          postTitle: this.pageTitle || ''
         })}
       </div>
     );

@@ -133,75 +133,6 @@ class YlTable extends React.Component {
     return columns;
   };
 
-  getOperateColumn = () => {
-    const {
-      onShowDetail,
-      onShowEdit,
-      onRemove,
-      getExtraOperateColumns,
-      operateColumnProps = {}
-    } = this.props;
-
-    if (
-      !_.isFunction(onShowDetail) &&
-      !_.isFunction(onShowEdit) &&
-      !_.isFunction(onRemove) &&
-      !_.isFunction(getExtraOperateColumns)
-    ) {
-      return;
-    }
-
-    let col = {
-      title: '操作',
-      dataIndex: 'optionColumn',
-      fixed: _.isUndefined(operateColumnProps.fixed)
-        ? 'right'
-        : operateColumnProps.fixed,
-      key: 'optionColumn',
-      width: _.get(operateColumnProps, 'width') || 150,
-      render: (text, record, index) => {
-        return (
-          <span className="table_operation">
-            {_.isFunction(onShowDetail) && (
-              <span
-                style={{ margin: '0 5px', cursor: 'pointer', color: '#00B9EF' }}
-                onClick={onShowDetail.bind(this, record)}>
-                查看
-              </span>
-            )}
-            {_.isFunction(onShowEdit) && (
-              <span
-                style={{ margin: '0 5px', cursor: 'pointer', color: '#00B9EF' }}
-                onClick={onShowEdit.bind(this, record)}>
-                编辑
-              </span>
-            )}
-            {_.isFunction(onRemove) && (
-              <Popconfirm
-                title="确定删除？"
-                onConfirm={onRemove.bind(this, record)}
-                okText="确定"
-                cancelText="取消">
-                <span
-                  style={{
-                    margin: '0 5px',
-                    cursor: 'pointer',
-                    color: '#00B9EF'
-                  }}>
-                  删除
-                </span>
-              </Popconfirm>
-            )}
-            {_.isFunction(getExtraOperateColumns) &&
-              getExtraOperateColumns(text, record, index)}
-          </span>
-        );
-      }
-    };
-
-    return col;
-  };
-
   //暂不需要支持resize
   rewriteComponents = () => {
     const { resizable } = this.props;
@@ -225,7 +156,7 @@ class YlTable extends React.Component {
    * 4.如过有固定列 且有部分没有宽度 则没有设置宽度的列平分剩余的宽度 (如果计算后每列动态宽度 < 150 设置为150)
    */
   getColumnsFromModel = (model, tableWidth, options = {}) => {
-    let { selectable, operateColumnProps, tableProps } = options;
+    let { selectable } = options;
 
     let hasFixedCol = selectable;
 
@@ -290,21 +221,21 @@ class YlTable extends React.Component {
       fixedWidth += 62;
     }
 
-    // 如果有操作列
-    if (
-      _.isFunction(tableProps.onShowDetail) ||
-      _.isFunction(tableProps.onShowEdit) ||
-      _.isFunction(tableProps.onRemove) ||
-      _.isFunction(tableProps.getExtraOperateColumns)
-    ) {
-      currWidth += _.get(operateColumnProps, 'width') || 150;
-      fixedWidth += _.get(operateColumnProps, 'width') || 150;
+    // // 如果有操作列
+    // if (
+    //   _.isFunction(tableProps.onShowDetail) ||
+    //   _.isFunction(tableProps.onShowEdit) ||
+    //   _.isFunction(tableProps.onRemove) ||
+    //   _.isFunction(tableProps.getExtraOperateColumns)
+    // ) {
+    //   currWidth += _.get(operateColumnProps, 'width') || 150;
+    //   fixedWidth += _.get(operateColumnProps, 'width') || 150;
 
-      hasFixedCol = true;
-      if (_.has(operateColumnProps, 'fixed')) {
-        hasFixedCol = operateColumnProps.fixed;
-      }
-    }
+    //   hasFixedCol = true;
+    //   if (_.has(operateColumnProps, 'fixed')) {
+    //     hasFixedCol = operateColumnProps.fixed;
+    //   }
+    // }
 
     // 处理 2，4
     if (autoWidthColCount) {
@@ -356,7 +287,6 @@ class YlTable extends React.Component {
       isFullScreen,
       rowKey,
       getRowKey,
-      operateColumnProps,
       columnData,
 
       ...restProps
@@ -372,17 +302,10 @@ class YlTable extends React.Component {
       <AutoSizer>
         {({ width, height }) => {
           let xCol = this.getColumnsFromModel(columnData, width - 28, {
-            selectable,
-            operateColumnProps,
-            tableProps: this.props
+            selectable
           });
 
           let tableColumns = this.processColumns(xCol);
-          const optColumn = this.getOperateColumn();
-
-          if (optColumn) {
-            tableColumns.push(optColumn);
-          }
 
           const tableScroll = {
             x: _.sumBy(tableColumns, (each) => each.width || 150),

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Form, Button, message, Drawer, Row } from 'antd';
+import { Form, Button, message, Drawer, Row, Icon } from 'antd';
 import styles from './index.less';
 import _ from 'lodash';
 import classNames from 'classnames';
@@ -37,7 +37,6 @@ class CommonEditor extends BaseForm {
       isReadonly,
       ...restProps
     } = this.props;
-    editorItems = _.cloneDeep(editorItems);
     let submitLoading = globalLoading.create;
 
     if (isUpdate) {
@@ -61,17 +60,28 @@ class CommonEditor extends BaseForm {
         className={classNames(styles.commonEditDrawer, this.props.className)}
         {...restProps}>
         <div className="draw-content">
-          <Form>
-            <Row>
-              {editorItems.map((source) => {
-                // source.control = source.control;
-                source.fieldDecorator = source.fieldDecorator || {};
-                let editorCom = editorFactroy(source.control);
+          {globalLoading.getDetail === 'pending' ? (
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                height: '100%'
+              }}>
+              <Icon type="loading" style={{ fontSize: 30 }} />
+            </div>
+          ) : (
+            <Form>
+              <Row>
+                {editorItems.map((source) => {
+                  source.fieldDecorator = source.fieldDecorator || {};
+                  let editorCom = editorFactroy(source.control);
 
-                return editorCom(source, this.props);
-              })}
-            </Row>
-          </Form>
+                  return editorCom(source, this.props);
+                })}
+              </Row>
+            </Form>
+          )}
         </div>
         <div className="draw-footer">
           <Button
@@ -92,4 +102,33 @@ class CommonEditor extends BaseForm {
   }
 }
 
-export default Form.create()(CommonEditor);
+export default Form.create({
+  name: 'drawer_form_' + String(Math.random()).slice(2) // 使用随机数来避免页面出现id相同的组件
+
+  // 完全受控 需要配合onValuesChange 和 onFieldsChange 来使用 逻辑复杂
+  // mapPropsToFields(props) {
+  //   let { model, editorItems = [] } = props;
+  //   console.log('mapPropsToFields', props);
+
+  //   let ret = {};
+
+  //   if (_.isEmpty(editorItems)) {
+  //     return {};
+  //   }
+
+  //   editorItems.forEach((item) => {
+  //     let key = item.id;
+  //     let val = model[key];
+
+  //     if (_.isFunction(item.convertModelToControl)) {
+  //       val = item.convertModelToControl(val, { source: item, props });
+  //     }
+
+  //     ret[key] = Form.createFormField({
+  //       value: val
+  //     });
+  //   });
+
+  //   return ret;
+  // }
+})(CommonEditor);
